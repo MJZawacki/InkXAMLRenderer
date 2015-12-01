@@ -12,6 +12,9 @@ using Windows.Graphics.Imaging;
 using Windows.UI.Input.Inking;
 using System.Numerics;
 using Windows.UI;
+using Windows.UI.Xaml.Media;
+using Microsoft.Graphics.Canvas.UI.Xaml;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace InkingWorkaround
 {
@@ -30,68 +33,121 @@ namespace InkingWorkaround
             _canvasDevice.DeviceLost += HandleDeviceLost;
         }
 
-        //public async Task<SoftwareBitmap> RenderToCanvasAsync(IReadOnlyList<InkStroke> inkStrokes, IReadOnlyList<InkStroke> highlightStrokes, double width, double height)
-        //{
-        //    var dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
-        //    try
-        //    {
-        //        var renderTarget = TargetCanvas
-        //    }
-        //}
-
-        public async Task<SoftwareBitmap> RenderToImageAsync(IReadOnlyList<InkStroke> inkStrokes, IReadOnlyList<InkStroke> highlightStrokes, double width, double height)
+        public  async Task<CanvasImageSource> RenderToImageSourceAsync(
+            RenderTargetBitmap renderTargetBitmap,
+            IReadOnlyList<InkStroke> inkStrokes, IReadOnlyList<InkStroke> highlightStrokes, double width, double height)
         {
+
             var dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
 
+            var imageSource = new CanvasImageSource(_canvasDevice, (float) width, (float) height, dpi);
+            var renderTarget = new CanvasRenderTarget(_canvasDevice, (float)width, (float)height, dpi);
 
-            try
+            using (var drawingSession = imageSource.CreateDrawingSession(Colors.Black))
             {
-                var renderTarget = new CanvasRenderTarget(_canvasDevice, (float)width, (float)height, dpi);
-                using (renderTarget)
+                try
+                {
+
+                
+                    var pixels = await renderTargetBitmap.GetPixelsAsync();
+                    var bitmap = SoftwareBitmap.CreateCopyFromBuffer(pixels, BitmapPixelFormat.Bgra8,
+                        renderTargetBitmap.PixelWidth, renderTargetBitmap.PixelHeight);
+                    var convertedImage = SoftwareBitmap.Convert(
+                        bitmap,
+                        BitmapPixelFormat.Bgra8,
+                        BitmapAlphaMode.Premultiplied
+                    );
+                    var background = CanvasBitmap.CreateFromSoftwareBitmap(_canvasDevice, convertedImage);
+                    drawingSession.DrawImage(background);
+                    drawingSession.DrawInk(inkStrokes);
+                    DrawHighlightInk(drawingSession, highlightStrokes);
+                    return imageSource;
+
+                }
+                catch (Exception e) when (_canvasDevice.IsDeviceLost(e.HResult))
+                {
+                    _canvasDevice.RaiseDeviceLost();
+                }
+
+            return null;
+
+            }
+        }
+
+
+     
+
+        public async Task<SoftwareBitmap> RenderToBitmapAsync(
+            RenderTargetBitmap renderTargetBitmap,
+            IReadOnlyList<InkStroke> inkStrokes,
+            IReadOnlyList<InkStroke> highlightStrokes, double width, double height)
+        {
+
+            var dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
+            var renderTarget = new CanvasRenderTarget(_canvasDevice, (float)width, (float)height, dpi);
+            using (renderTarget)
+            {
+
+                try
                 {
                     using (var drawingSession = renderTarget.CreateDrawingSession())
                     {
+                        var pixels = await renderTargetBitmap.GetPixelsAsync();
+                        var bitmap = SoftwareBitmap.CreateCopyFromBuffer(pixels, BitmapPixelFormat.Bgra8, 
+                            renderTargetBitmap.PixelWidth, renderTargetBitmap.PixelHeight);
+                        var convertedImage = SoftwareBitmap.Convert(
+                            bitmap,
+                            BitmapPixelFormat.Bgra8,
+                            BitmapAlphaMode.Premultiplied
+    );
+                        var background = CanvasBitmap.CreateFromSoftwareBitmap(_canvasDevice, convertedImage);
+                        drawingSession.DrawImage(background);
                         drawingSession.DrawInk(inkStrokes);
 
                         DrawHighlightInk(drawingSession, highlightStrokes);
                     }
 
-                    return await SoftwareBitmap.CreateCopyFromSurfaceAsync(renderTarget);
+                    return await SoftwareBitmap.CreateCopyFromSurfaceAsync(renderTarget, BitmapAlphaMode.Premultiplied);
                 }
-            }
-            catch (Exception e) when (_canvasDevice.IsDeviceLost(e.HResult))
-            {
-                _canvasDevice.RaiseDeviceLost();
-            }
+                catch (Exception e) when (_canvasDevice.IsDeviceLost(e.HResult))
+                {
+                    _canvasDevice.RaiseDeviceLost();
+                }
 
+            }
             return null;
         }
 
-        public async Task<SoftwareBitmap> RenderAsync(IReadOnlyList<InkStroke> inkStrokes, IReadOnlyList<InkStroke> highlightStrokes, double width, double height)
+        public async Task<SoftwareBitmap> RenderToBitmapAsync(IReadOnlyList<InkStroke> inkStrokes, 
+            IReadOnlyList<InkStroke> highlightStrokes, double width, double height)
         {
             var dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
-
-
-            try
+            var renderTarget = new CanvasRenderTarget(_canvasDevice, (float)width, (float)height, dpi);
+            using (renderTarget)
             {
-                var renderTarget = new CanvasRenderTarget(_canvasDevice, (float)width, (float)height, dpi);
-                using (renderTarget)                        
+
+                try
                 {
                     using (var drawingSession = renderTarget.CreateDrawingSession())
                     {
+                        var bitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(renderTarget, BitmapAlphaMode.Premultiplied);
+                        var background = CanvasBitmap.CreateFromSoftwareBitmap(_canvasDevice, bitmap);
+                        drawingSession.DrawImage(background);
                         drawingSession.DrawInk(inkStrokes);
-                        
+
                         DrawHighlightInk(drawingSession, highlightStrokes);
                     }
 
-                    return await SoftwareBitmap.CreateCopyFromSurfaceAsync(renderTarget,BitmapAlphaMode.Premultiplied);
+                    return await SoftwareBitmap.CreateCopyFromSurfaceAsync(renderTarget, BitmapAlphaMode.Premultiplied);
                 }
-            }
-            catch (Exception e) when (_canvasDevice.IsDeviceLost(e.HResult))
-            {
-                _canvasDevice.RaiseDeviceLost();
-            }
+                catch (Exception e) when (_canvasDevice.IsDeviceLost(e.HResult))
+                {
+                    _canvasDevice.RaiseDeviceLost();
+                }
 
+         
+            }
+            
             return null;
         }
 

@@ -14,12 +14,12 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" Margin="10,10">
 
-            <Button Tapped="HighlightButton_Tapped">Highlight</Button>
-            <Button Tapped="InkButton_Tapped">Ink</Button>
+            <Button Tapped="HighlightButton_Tapped" Margin="10,10">Highlight</Button>
+            <Button Tapped="InkButton_Tapped" Margin="10,10">Ink</Button>
         </StackPanel>
-        <Grid x:Name="InkingRoot" Grid.Column="0" Grid.ColumnSpan="2"  VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Grid x:Name="InkingRoot" Grid.Column="0"  VerticalAlignment="Center" HorizontalAlignment="Center">
             <Rectangle Height="640" Width="720" Stroke="Black" StrokeThickness="4"/>
             <Image  Source="Images/circle_image3.jpg" />
 
@@ -32,9 +32,9 @@
             </Image>
             
         </Grid>
-        <!--<Image Grid.Column="1" x:Name="TargetImage" Width="500"/>-->
+        <Image Grid.Column="1" x:Name="TargetImage" Width="500"/>
         <!--<canvas:CanvasControl  Grid.Column="1" x:Name="TargetCanvas" Width="500"/>-->
-        <Button x:Name="SaveButton" Grid.Column="0" Click="SaveButton_Click" Content="Save"
+        <Button x:Name="SaveButton" Grid.Column="0" Click="SaveScreenShot_Click" Content="Save"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="30" />
     </Grid>
 </Page>
