@@ -15,6 +15,7 @@ using Windows.UI;
 using Windows.UI.Xaml.Media;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.Foundation;
 
 namespace InkingWorkaround
 {
@@ -33,34 +34,37 @@ namespace InkingWorkaround
             _canvasDevice.DeviceLost += HandleDeviceLost;
         }
 
+        
         public  async Task<CanvasImageSource> RenderToImageSourceAsync(
-            RenderTargetBitmap renderTargetBitmap,
+            RenderTargetBitmap backgroundBitmap,
             IReadOnlyList<InkStroke> inkStrokes, IReadOnlyList<InkStroke> highlightStrokes, double width, double height)
         {
 
             var dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
 
             var imageSource = new CanvasImageSource(_canvasDevice, (float) width, (float) height, dpi);
-            var renderTarget = new CanvasRenderTarget(_canvasDevice, (float)width, (float)height, dpi);
 
-            using (var drawingSession = imageSource.CreateDrawingSession(Colors.Black))
+
+            using (var drawingSession = imageSource.CreateDrawingSession(Colors.White))
             {
                 try
                 {
 
                 
-                    var pixels = await renderTargetBitmap.GetPixelsAsync();
+                    var pixels = await backgroundBitmap.GetPixelsAsync();
                     var bitmap = SoftwareBitmap.CreateCopyFromBuffer(pixels, BitmapPixelFormat.Bgra8,
-                        renderTargetBitmap.PixelWidth, renderTargetBitmap.PixelHeight);
+                        backgroundBitmap.PixelWidth, backgroundBitmap.PixelHeight);
                     var convertedImage = SoftwareBitmap.Convert(
                         bitmap,
                         BitmapPixelFormat.Bgra8,
                         BitmapAlphaMode.Premultiplied
                     );
                     var background = CanvasBitmap.CreateFromSoftwareBitmap(_canvasDevice, convertedImage);
-                    drawingSession.DrawImage(background);
+                    drawingSession.DrawImage(background,new Rect(0,0,
+                        width, 
+                        height));
                     drawingSession.DrawInk(inkStrokes);
-                    DrawHighlightInk(drawingSession, highlightStrokes);
+                    //DrawHighlightInk(drawingSession, highlightStrokes);
                     return imageSource;
 
                 }
@@ -101,10 +105,11 @@ namespace InkingWorkaround
                             BitmapAlphaMode.Premultiplied
     );
                         var background = CanvasBitmap.CreateFromSoftwareBitmap(_canvasDevice, convertedImage);
-                        drawingSession.DrawImage(background);
+                        drawingSession.DrawImage(background, new Rect(0,0,
+                            width, height));
                         drawingSession.DrawInk(inkStrokes);
 
-                        DrawHighlightInk(drawingSession, highlightStrokes);
+                        //DrawHighlightInk(drawingSession, highlightStrokes);
                     }
 
                     return await SoftwareBitmap.CreateCopyFromSurfaceAsync(renderTarget, BitmapAlphaMode.Premultiplied);

@@ -20,7 +20,7 @@
             <Button Tapped="InkButton_Tapped" Margin="10,10">Ink</Button>
         </StackPanel>
         <Grid x:Name="InkingRoot" Grid.Column="0"  VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Rectangle Height="640" Width="720" Stroke="Black" StrokeThickness="4"/>
+            <Rectangle Height="640" Width="720" Stroke="Red" StrokeThickness="4"/>
             <Image  Source="Images/circle_image3.jpg" />
 
             <InkCanvas  x:Name="AnnotationInkCanvas" />
