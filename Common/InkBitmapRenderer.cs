@@ -17,7 +17,7 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Foundation;
 
-namespace InkingWorkaround
+namespace InkRendering
 {
 
     public class InkBitmapRenderer

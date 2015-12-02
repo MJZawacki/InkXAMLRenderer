@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 
 
-namespace InkingWorkaround
+namespace InkRendering
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

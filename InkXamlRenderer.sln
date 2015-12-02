@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkingWorkaround", "InkingWorkaround\InkingWorkaround.csproj", "{2570109D-3D6A-4512-92D0-59758C368D65}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkXamlRenderer10586", "InkXamlRenderer10586\InkXamlRenderer10586.csproj", "{2570109D-3D6A-4512-92D0-59758C368D65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkingWorkaround10240", "InkingWorkaround10240\InkingWorkaround10240.csproj", "{666D5209-9CA6-4993-B0D7-BA31296D1D3E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InkXamlRenderer10240", "InkXamlRenderer10240\InkXamlRenderer10240.csproj", "{666D5209-9CA6-4993-B0D7-BA31296D1D3E}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common", "SharedProject1\Common.shproj", "{1FF67689-C689-4F10-AA5B-8F799ACB83CE}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Common", "Common\Common.shproj", "{1FF67689-C689-4F10-AA5B-8F799ACB83CE}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		SharedProject1\SharedProject1.projitems*{666d5209-9ca6-4993-b0d7-ba31296d1d3e}*SharedItemsImports = 4
-		SharedProject1\SharedProject1.projitems*{2570109d-3d6a-4512-92d0-59758c368d65}*SharedItemsImports = 4
-		SharedProject1\SharedProject1.projitems*{1ff67689-c689-4f10-aa5b-8f799acb83ce}*SharedItemsImports = 13
+		Common\Common.projitems*{666d5209-9ca6-4993-b0d7-ba31296d1d3e}*SharedItemsImports = 4
+		Common\Common.projitems*{2570109d-3d6a-4512-92d0-59758c368d65}*SharedItemsImports = 4
+		Common\Common.projitems*{1ff67689-c689-4f10-aa5b-8f799acb83ce}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
