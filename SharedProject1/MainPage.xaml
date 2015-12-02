@@ -14,26 +14,28 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <StackPanel Orientation="Vertical" Margin="10,10">
 
-            <Button Tapped="HighlightButton_Tapped" Margin="10,10">Highlight</Button>
-            <Button Tapped="InkButton_Tapped" Margin="10,10">Ink</Button>
-        </StackPanel>
         <Grid x:Name="InkingRoot" Grid.Column="0"  VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Rectangle Height="640" Width="720" Stroke="Red" StrokeThickness="4"/>
-            <Image  Source="Images/circle_image3.jpg" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5*"/>
+            </Grid.RowDefinitions>
+            <Rectangle Grid.RowSpan="2" Height="640" Width="720" Stroke="LawnGreen" StrokeThickness="4"/>
+            <Image Grid.RowSpan="2"   Source="Images/circle_image3.jpg" Margin="10,10"/>
 
-            <InkCanvas  x:Name="AnnotationInkCanvas" />
+            <InkCanvas Grid.RowSpan="2"   x:Name="AnnotationInkCanvas" />
 
-            <Image x:Name="InkImage" Visibility="Collapsed">
+            <Image Grid.RowSpan="2"  x:Name="InkImage" Visibility="Collapsed" >
                 <Image.Source>
                     <SoftwareBitmapSource x:Name="InkImageSource" />
                 </Image.Source>
             </Image>
-            
+            <StackPanel Orientation="Horizontal" Margin="10,10">
+                <Button Tapped="HighlightButton_Tapped" Margin="10,10" Background="LawnGreen">Highlight</Button>
+                <Button Tapped="InkButton_Tapped" Margin="10,10" Background="LawnGreen">Ink</Button>
+            </StackPanel>
         </Grid>
         <Image Grid.Column="1" x:Name="TargetImage" Width="500"/>
-        <!--<canvas:CanvasControl  Grid.Column="1" x:Name="TargetCanvas" Width="500"/>-->
         <Button x:Name="SaveButton" Grid.Column="0" Click="SaveScreenShot_Click" Content="Save"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="30" />
     </Grid>
