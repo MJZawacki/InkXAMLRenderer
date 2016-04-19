@@ -20,12 +20,15 @@ namespace InkRendering
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private readonly InkBitmapRenderer _inkBitmapRenderer = new InkBitmapRenderer();
+        private readonly InkBitmapRenderer _inkBitmapRenderer = null;
         private InkPresenter _inkPresenter;
 
         public MainPage()
         {
             this.InitializeComponent();
+
+          
+            _inkBitmapRenderer = App.BitmapRenderer = new InkBitmapRenderer();
 
             _inkPresenter = AnnotationInkCanvas.InkPresenter;
             _inkPresenter.InputDeviceTypes =

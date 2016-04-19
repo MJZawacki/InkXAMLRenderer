@@ -114,6 +114,10 @@ namespace InkRendering
             return null;
         }
     
+        public void Trim()
+        {
+            _canvasDevice.Trim();
+        }
        
         private void HandleDeviceLost(CanvasDevice sender, object args)
         {
